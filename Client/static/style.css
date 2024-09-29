@@ -1,0 +1,47 @@
+/* static/style.css */
+body {
+    background-color: rgb(25, 143, 88);
+    color: white; /* Change text color for contrast */
+    font-family: Arial, sans-serif;
+}
+
+#card-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 390px; 
+    padding-left: 500px;
+}
+
+.card img {
+    height: auto;
+    width: 100px;
+}
+
+.card:hover {
+    border: 2px solid yellow; /* Yellow border on hover */
+    box-shadow: 0 0 10px rgb(173, 173, 18); /* Optional: Add a glow effect */
+    transform: scale(1.7); /* Scale the card up on hover */
+}
+
+/* Example CSS for cards */
+.card {
+    width: 75px; /* Set a width for the card */
+    transition: transform 0.3s ease; /* Smooth transition for zoom effect */
+    cursor: pointer; /* Change cursor to indicate interaction */
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    transition: transform 0.5s ease;
+}
+
+.rotate {
+    transform: rotateX(200deg);
+}
+
+.brown-field {
+    width: 500px;  /* Width of the rectangle */
+    height: 300px; /* Height of the rectangle */
+    background-color: brown; /* Brown color */
+    border: 2px solid black; /* Optional border */
+    margin: 20px auto; /* Center the field horizontally */
+}

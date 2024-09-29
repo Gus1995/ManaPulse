@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManaPulse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <img src="{{ url_for('static', filename='logo.jpg') }}" width="200px">
+    <div style="background-color: brown; padding-left: 50px;">
+        <p>Magic</p>
+    </div>
+</head>
+<body>
+    <div id="card-container"></div> 
+    <div class="brown-field"></div> <!-- Brown rectangle field -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cardContainer = document.getElementById('card-container');
+
+            // Function to render cards dynamically
+            function renderCards(cards) {
+                cards.forEach((card, index) => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card'; // Add a class for styling
+                    cardElement.setAttribute('draggable', true); // Make the card draggable
+
+                    cardElement.innerHTML = `
+                        <img src="${card.image_url}" alt="${card.name}" class="card-image">
+                    `;
+
+                    // Store the index in a data attribute for reference
+                    cardElement.setAttribute('data-index', index);
+
+                    // Add event listener for double-click (tap to flip/rotate the card)
+                    cardElement.addEventListener('dblclick', (e) => {
+                        e.preventDefault(); // Prevent the default behavior
+                        cardElement.classList.toggle('rotate'); // Toggle the rotation
+                    });
+
+                    // Add drag event listeners
+                    cardElement.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', index); // Use the index for transfer
+                        e.dataTransfer.effectAllowed = 'move'; // Indicate that we're moving
+                        cardElement.style.opacity = '0.5'; // Change opacity while dragging
+                    });
+
+                    cardElement.addEventListener('dragend', () => {
+                        cardElement.style.opacity = '1'; // Reset opacity
+                    });
+
+                    cardContainer.appendChild(cardElement);
+                });
+            }
+
+            const cardData = {{ cards | tojson }};
+            renderCards(cardData);
+
+            // Handle dragover and drop events
+            cardContainer.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Prevent default to allow drop
+                e.dataTransfer.dropEffect = 'move'; // Show move effect
+            });
+
+            cardContainer.addEventListener('drop', (e) => {
+                e.preventDefault(); // Prevent default action
+                const index = e.dataTransfer.getData('text/plain'); // Get the index of the dragged card
+                const draggedCard = cardContainer.children[index]; // Get the card element
+
+                // Calculate mouse position for new placement
+                const rect = cardContainer.getBoundingClientRect();
+                const offsetX = e.clientX - rect.left;
+                const offsetY = e.clientY - rect.top;
+
+                // Position the card based on mouse position
+                draggedCard.style.position = 'absolute'; // Ensure it is positioned absolutely
+                draggedCard.style.left = `${offsetX - draggedCard.offsetWidth / 2}px`;
+                draggedCard.style.top = `${offsetY - draggedCard.offsetHeight / 2}px`;
+
+                // Remove the card from the container and re-add it to create the new position
+                cardContainer.removeChild(draggedCard);
+                cardContainer.appendChild(draggedCard);
+            });
+        });
+    </script> 
+</body>
+</html>
