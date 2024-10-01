@@ -5,84 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ManaPulse</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <img src="{{ url_for('static', filename='logo.jpg') }}" width="200px">
-    <div style="background-color: brown; padding-left: 50px;">
-        <p>Magic</p>
-    </div>
 </head>
-<body>
-    <div id="card-container"></div> 
-    <div class="brown-field"></div> <!-- Brown rectangle field -->
+    <body>
+        <div id="card-container"></div> 
 
-    <script>
+            <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const cardContainer = document.getElementById('card-container');
+    const cardContainer = document.getElementById('card-container');
 
-            // Function to render cards dynamically
-            function renderCards(cards) {
-                cards.forEach((card, index) => {
-                    const cardElement = document.createElement('div');
-                    cardElement.className = 'card'; // Add a class for styling
-                    cardElement.setAttribute('draggable', true); // Make the card draggable
+    // Function to render cards dynamically
+    function renderCards(cards) {
+        cards.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card'; 
+            cardElement.setAttribute('draggable', true); 
 
-                    cardElement.innerHTML = `
-                        <img src="${card.image_url}" alt="${card.name}" class="card-image">
-                    `;
+            cardElement.innerHTML = `
+                <div class="brown-field">
+                    <img src="${card.image_url}" alt="${card.name}" class="card-image">
+                    <div class="dropdown" style="display: none;">
+                        <ul>
+                            <li>Tap</li>
+                            <li>Return</li>
+                            <li>Activate ability</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
 
-                    // Store the index in a data attribute for reference
-                    cardElement.setAttribute('data-index', index);
-
-                    // Add event listener for double-click (tap to flip/rotate the card)
-                    cardElement.addEventListener('dblclick', (e) => {
-                        e.preventDefault(); // Prevent the default behavior
-                        cardElement.classList.toggle('rotate'); // Toggle the rotation
-                    });
-
-                    // Add drag event listeners
-                    cardElement.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('text/plain', index); // Use the index for transfer
-                        e.dataTransfer.effectAllowed = 'move'; // Indicate that we're moving
-                        cardElement.style.opacity = '0.5'; // Change opacity while dragging
-                    });
-
-                    cardElement.addEventListener('dragend', () => {
-                        cardElement.style.opacity = '1'; // Reset opacity
-                    });
-
-                    cardContainer.appendChild(cardElement);
-                });
-            }
-
-            const cardData = {{ cards | tojson }};
-            renderCards(cardData);
-
-            // Handle dragover and drop events
-            cardContainer.addEventListener('dragover', (e) => {
-                e.preventDefault(); // Prevent default to allow drop
-                e.dataTransfer.dropEffect = 'move'; // Show move effect
+            // Double-click to flip/rotate the card
+            cardElement.addEventListener('dblclick', (e) => {
+                e.preventDefault(); // Prevent the default behavior
+                cardElement.classList.toggle('rotate'); // Toggle the rotation
             });
 
-            cardContainer.addEventListener('drop', (e) => {
-                e.preventDefault(); // Prevent default action
-                const index = e.dataTransfer.getData('text/plain'); // Get the index of the dragged card
-                const draggedCard = cardContainer.children[index]; // Get the card element
-
-                // Calculate mouse position for new placement
-                const rect = cardContainer.getBoundingClientRect();
-                const offsetX = e.clientX - rect.left;
-                const offsetY = e.clientY - rect.top;
-
-                // Position the card based on mouse position
-                draggedCard.style.position = 'absolute'; // Ensure it is positioned absolutely
-                draggedCard.style.left = `${offsetX - draggedCard.offsetWidth / 2}px`;
-                draggedCard.style.top = `${offsetY - draggedCard.offsetHeight / 2}px`;
-
-                // Remove the card from the container and re-add it to create the new position
-                cardContainer.removeChild(draggedCard);
-                cardContainer.appendChild(draggedCard);
+            // Drag events
+            cardElement.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', index); // Use the index for transfer
+                e.dataTransfer.effectAllowed = 'move'; // Indicate that we're moving
+                cardElement.style.opacity = '0.5'; // Change opacity while dragging
             });
+
+            cardElement.addEventListener('dragend', () => {
+                cardElement.style.opacity = '1'; // Reset opacity
+            });
+
+            // Hover event for dropdown
+            const brownField = cardElement.querySelector('.brown-field');
+            const dropdown = cardElement.querySelector('.dropdown');
+            let hoverTimeout;
+
+            brownField.addEventListener('mouseenter', () => {
+                hoverTimeout = setTimeout(() => {
+                    dropdown.style.display = 'block'; // Show dropdown after 1 second
+                }, 1000); // 1 second delay
+            });
+
+            brownField.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimeout); // Cancel the timer if user leaves early
+                dropdown.style.display = 'none'; // Hide dropdown
+            });
+
+            cardContainer.appendChild(cardElement);
         });
-    </script> 
+    }
+
+    const cardData = {{ cards | tojson }};
+    renderCards(cardData);
+
+    // Handle dragover and drop events
+    cardContainer.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Prevent default to allow drop
+        e.dataTransfer.dropEffect = 'move'; // Show move effect
+    });
+
+    cardContainer.addEventListener('drop', (e) => {
+        e.preventDefault(); // Prevent default action
+        const index = e.dataTransfer.getData('text/plain'); // Get the index of the dragged card
+        const draggedCard = cardContainer.children[index]; // Get the card element
+
+        // Calculate mouse position for new placement
+        const rect = cardContainer.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        const offsetY = e.clientY - rect.top;
+
+        // Position the card based on mouse position
+        draggedCard.style.position = 'absolute'; // Ensure it is positioned absolutely
+        draggedCard.style.left = `${offsetX - draggedCard.offsetWidth / 2}px`;
+        draggedCard.style.top = `${offsetY - draggedCard.offsetHeight / 2}px`;
+
+        // Remove the card from the container and re-add it to create the new position
+        cardContainer.removeChild(draggedCard);
+        cardContainer.appendChild(draggedCard);
+    });
+});
+
+    </script>
+    
+    <div class="mana_dashboard">
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/blue_mana.svg') }}" alt="Blue Mana"><span>{{ player1_mana['{U}'] }}</span>
+        </div>
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/black_mana.svg') }}" alt="Black Mana">
+            <span>{{ player1_mana['{B}'] }}</span>
+        </div>
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/red_mana.svg') }}" alt="Red Mana">
+            <span>{{ player1_mana['{R}'] }}</span>
+        </div>
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/white_mana.svg') }}" alt="White Mana">
+            <span>{{ player1_mana['{W}'] }}</span>
+        </div>
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/green_mana.svg') }}" alt="Green Mana">
+            <span>{{ player1_mana['{G}'] }}</span>
+        </div>
+        <div class="mana_item">
+            <img src="{{ url_for('static', filename='symbols/generic_mana.svg') }}" alt="Generic Mana">
+            <span>{{ player1_mana['Generic'] }}</span>
+        </div>
+    </div>
+    
 </body>
 </html>

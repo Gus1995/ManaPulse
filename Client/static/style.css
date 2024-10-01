@@ -1,14 +1,14 @@
 /* static/style.css */
 body {
     background-color: rgb(25, 143, 88);
-    color: white; /* Change text color for contrast */
+    color: white; 
     font-family: Arial, sans-serif;
 }
 
 #card-container {
     display: flex;
     flex-wrap: wrap;
-    padding-top: 390px; 
+    padding-top: 400px; 
     padding-left: 500px;
 }
 
@@ -20,10 +20,10 @@ body {
 .card:hover {
     border: 2px solid yellow; /* Yellow border on hover */
     box-shadow: 0 0 10px rgb(173, 173, 18); /* Optional: Add a glow effect */
-    transform: scale(1.7); /* Scale the card up on hover */
+    transform: scale(1.2); /* Scale the card up on hover */
+    position: relative;
 }
 
-/* Example CSS for cards */
 .card {
     width: 75px; /* Set a width for the card */
     transition: transform 0.3s ease; /* Smooth transition for zoom effect */
@@ -31,17 +31,30 @@ body {
     display: flex;
     align-items: center;
     font-size: 20px;
-    transition: transform 0.5s ease;
+    transition: transform 0.10s ease;
 }
 
 .rotate {
-    transform: rotateX(200deg);
+    transform: rotate(90deg);
 }
 
-.brown-field {
-    width: 500px;  /* Width of the rectangle */
-    height: 300px; /* Height of the rectangle */
-    background-color: brown; /* Brown color */
-    border: 2px solid black; /* Optional border */
-    margin: 20px auto; /* Center the field horizontally */
+
+
+
+/* Initially hide the dropdown */
+.dropdown {
+    display: none;
+    position: absolute;
+    left: 100%; /* Position the dropdown below the brown field */
+    width: 100px;
+    background-color: #817e7ec2;
+    border: #817e7ec2;
+    color: #000;
+    font-size: small;
+}
+
+.mana_dashboard{
+    width: 20px; 
+    height: 20px;
+   
 }

@@ -74,9 +74,6 @@ def target_gains_power_abbility(target, ability, until_endof):
     
 
 
-print(player_blueprint.gustavo.white_mana)
-print(player_blueprint.gustavo.blue_mana)
-print(player_blueprint.gustavo.red_mana)
-print(player_blueprint.gustavo.green_mana)
-print(player_blueprint.gustavo.black_mana)
-print(player_blueprint.gustavo.generic_mana)
+def return_target_card(card, origin, destiny):
+    origin.pop(card)
+    destiny.append(card)
