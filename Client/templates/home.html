@@ -102,10 +102,34 @@
 });
 
     </script>
+    <div class="life-counter">
+        <h1>Life: <span id="counterDisplay"></span></h1>
+        <button id="incrementBtn">+</button>
+        <button id="decrementBtn">-</button>
+    <script>
+        let counter = 20;
+        const counterDisplay = document.getElementById('counterDisplay');
+        const incrementBtn = document.getElementById('incrementBtn');
+        const decrementBtn = document.getElementById('decrementBtn');
+        counterDisplay.innerText = counter
+
+        incrementBtn.addEventListener('click', () => {
+            counter++;
+            counterDisplay.innerText = counter;
+        });
+
+        decrementBtn.addEventListener('click', () => {
+            counter--;
+            counterDisplay.innerText = counter;
+        });
+    </script>
+
+    </div>
     
     <div class="mana_dashboard">
         <div class="mana_item">
-            <img src="{{ url_for('static', filename='symbols/blue_mana.svg') }}" alt="Blue Mana"><span>{{ player1_mana['{U}'] }}</span>
+            <img src="{{ url_for('static', filename='symbols/blue_mana.svg') }}" alt="Blue Mana">
+            <span>{{ player1_mana['{U}'] }}</span>
         </div>
         <div class="mana_item">
             <img src="{{ url_for('static', filename='symbols/black_mana.svg') }}" alt="Black Mana">
@@ -128,6 +152,7 @@
             <span>{{ player1_mana['Generic'] }}</span>
         </div>
     </div>
+    
     
 </body>
 </html>
