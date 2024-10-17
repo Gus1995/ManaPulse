@@ -10,6 +10,10 @@
     <body>
         <div id="card-container"></div> 
 
+        <div name="deck">
+            <img class="deck" src="{{ url_for('static', filename='back.jpg') }}">
+        </div>
+
             <script>
         document.addEventListener('DOMContentLoaded', () => {
     const cardContainer = document.getElementById('card-container');
@@ -152,6 +156,7 @@
             <span>{{ player1_mana['Generic'] }}</span>
         </div>
     </div>
+    
     
     
 </body>
